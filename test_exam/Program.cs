@@ -18,23 +18,17 @@ namespace test_exam
         private static string _cookie;
         static async Task Main(string[] args)
         {
-            using (StreamWriter file = new StreamWriter("debug.log", true))
-            {
-                WebRequest request = WebRequest.Create("https://perm-300.ru/afisha");
-                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-                Console.WriteLine(response.StatusDescription);
-                Stream dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                ParsingHtml(responseFromServer);
-                //Console.WriteLine($"{responseFromServer}");
+            ParsingHtml(GetContent());
+            Console.Read();
+        }
 
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-                Console.Read();
-            }
-
+        public static string GetContent()
+        {
+            string url = "https://perm-300.ru/afisha";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            string responseFromServer = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            return responseFromServer;
         }
         public static void ParsingHtml(string htmlCode)
         {
@@ -46,13 +40,12 @@ namespace test_exam
             {
                 var date = newsItem.Descendants("div").FirstOrDefault(n => n.HasClass("eventdate"))?.InnerText.Trim();
                 var name = newsItem.Descendants("div").FirstOrDefault(n => n.HasClass("eventtitle"))?.InnerText.Trim();
-                var description = newsItem.Descendants("div").FirstOrDefault(n => !n.HasClass("shadow"))?.InnerText.Trim();
+                var description = newsItem.Descendants("div").FirstOrDefault(n => n.HasClass("shadow"))?.InnerText.Trim();
                 Console.WriteLine($"Заголовок: {name}");
                 Console.WriteLine($"Дата: {date}");
                 Console.WriteLine($"Описание: {description}");
                 Console.WriteLine(new string('-', 40));
             }
         }
-
     }
 }
