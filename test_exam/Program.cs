@@ -38,7 +38,7 @@ namespace test_exam
         }
         public static void ParsingHtml(string htmlCode)
         {
-            var html = new HtmlDocument();
+            var html = new HtmlDocument(); 
             html.LoadHtml(htmlCode);
             var Document = html.DocumentNode;
             var newsItems = Document.Descendants("a").Where(n => n.HasClass("eventshadow"));
